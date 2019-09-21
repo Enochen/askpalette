@@ -23,9 +23,6 @@ class Color:
     def __str__(self):
         return "Red: " + str(self.red) + " Green: " + str(self.green) + " Blue: " + str(self.blue) + " Score: " + str(self.score);
 
-    def score(self):
-        return self.score
-
 def __average(color1, color2):
     weight = color1.score / color2.score;
     newRed = (color1.red * weight + color2.red)/(weight+1)
