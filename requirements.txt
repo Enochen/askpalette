@@ -1,1 +1,2 @@
 Flask==1.0.2
+google-images-download==2.8.0
