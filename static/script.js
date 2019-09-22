@@ -18,7 +18,32 @@
 
 window.addEventListener('load', function () {
 
-  console.log("Hello World!");
+  //console.log("Hello World!");
 
 });
+
+function copy(text, target) {
+  target = target.getElementsByTagName("span")[0];
+  setTimeout(function() {
+    var copied = document.getElementsByClassName("copied");
+    for(var i = 0; i < copied.length; i++) {
+      copied.item(i).innerHTML = copied.item(i).id;
+      copied.item(i).classList.remove("copied")
+    }
+  }, 1000);
+  target.classList.add("copied");
+  target.innerHTML = "Copied!";
+  var input = document.createElement('input');
+  input.setAttribute('value', text);
+  document.body.appendChild(input);
+  input.select();
+  var result = document.execCommand('copy');
+  document.body.removeChild(input)
+  return result;
+}
+
+function gooo() {
+  var inputVal = document.getElementById("input").value;
+  window.location.replace("query/" + inputVal);
+}
 // [END gae_python37_log]

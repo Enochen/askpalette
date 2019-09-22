@@ -12,3 +12,5 @@
 # below:
 .git
 .gitignore
+venv
+__pycache__

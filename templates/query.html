@@ -1,0 +1,19 @@
+
+
+  <h1>{{query}}</h1>
+
+  <h3>looks like</h2>
+
+  {% with ns = namespace(x=0) %}
+    <div style="display: block; margin: auto; width:30%">
+      
+      {% for color in colors %}
+         
+        <div class="tooltip" onclick="copy('{{color.toHex()}}', this)" style="background-color:{{ color.toRGB() }};height:{{ color.relativeWidth(colors) }}px;">
+            <span id="{{color.toHex()}}" class="tooltiptext">{{color.toHex()}}</span>
+        </div>
+        {% set ns.x = ns.x + color.relativeWidth(colors) %}
+      
+      {% endfor %}
+      </div>
+  {% endwith %}

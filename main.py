@@ -21,8 +21,12 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-@app.route('/<query>')
-def root(query):
+@app.route('/')
+def root():
+    return render_template('index.html')
+
+@app.route('/query/<query>')
+def query(query):
     # For the sake of example, use static information to inflate the template.
     # This will be replaced with real information in later steps.
     colors = analyzer.stuff(query)
