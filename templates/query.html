@@ -9,7 +9,7 @@
       
       {% for color in colors %}
          
-        <div class="tooltip" onclick="copy('{{color.toHex()}}', this)" style="background-color:{{ color.toRGB() }};height:{{ color.relativeWidth(colors) }}px;border:black;border-style:outset">
+        <div class="tooltip" onclick="copy('{{color.toHex()}}', this)" style="background-color:{{ color.toRGB() }};height:{{ 10 + color.relativeWidth(colors) }}px;border:black;border-style:outset">
             <span id="{{color.toHex()}}" class="tooltiptext">{{color.toHex()}}</span>
         </div>
         {% set ns.x = ns.x + color.relativeWidth(colors) %}
