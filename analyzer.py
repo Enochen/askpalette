@@ -2,7 +2,7 @@ import io
 import os
 import urllib.request
 from google_images_download import google_images_download
-from google.cloud import vision
+from google.cloud import vision, storage
 from google.cloud.vision import types
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_conversions import convert_color
@@ -57,11 +57,16 @@ def __tooBig(url):
 def stuff(keyword):
     ColorList = []
 
-    if os.path.exists("cache/"+keyword):
-        with open('cache/'+keyword, 'r') as filehandle:
-            for line in filehandle:
-                list = line.split(",")
-                ColorList.append(Color(list[0],list[1],list[2],list[3]))
+    storageClient = storage.Client()
+    bucket = storageClient.get_bucket('askpalette.appspot.com')
+    blob = bucket.blob(keyword)
+    exists = storage.Blob(bucket=bucket, name=keyword).exists(storageClient)
+
+    if exists:
+        file = blob.download_as_string().decode().splitlines()
+        for line in file:
+            list = line.split(",")
+            ColorList.append(Color(list[0],list[1],list[2],list[3]))
         return ColorList
 
     response = google_images_download.googleimagesdownload()   #class instantiation
@@ -118,12 +123,14 @@ def stuff(keyword):
 
     ColorList.sort(key=lambda color: color.score, reverse=True)
 
-    if not os.path.exists("cache"):
-        os.mkdir("cache")
-
-    with open('cache/'+keyword, 'w+') as filehandle:
-        for color in ColorList:
-            filehandle.write('%s\n' % color)
+    uploadStr = ""
+    for color in ColorList:
+        uploadStr += (color.__str__() + '\n')
+    
+    storageClient = storage.Client()    
+    bucket = storageClient.get_bucket('askpalette.appspot.com')
+    blob = bucket.blob(keyword)
+    blob.upload_from_string(uploadStr)
 
     return ColorList
 #stuff("music")
