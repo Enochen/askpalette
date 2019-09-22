@@ -1,3 +1,3 @@
 # askpalette
 
-Ever wonder what things look like?
+Ever wonder what colors things are?
