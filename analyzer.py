@@ -56,7 +56,7 @@ def __tooBig(url):
 
 def stuff(keyword):
     response = google_images_download.googleimagesdownload()   #class instantiation
-    arguments = {"keywords":keyword,"limit":3,"silent_mode":True, "no_numbering":True,"no_download":True}
+    arguments = {"keywords":keyword,"limit":10,"silent_mode":True, "no_numbering":True,"no_download":True}
     #arguments = {"keywords":keyword,"limit":5,"no_numbering":True}   #creating list of arguments
     paths = response.download(arguments)   #passing the arguments to the function
 
