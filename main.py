@@ -30,7 +30,6 @@ def query(query):
     # For the sake of example, use static information to inflate the template.
     # This will be replaced with real information in later steps.
     colors = analyzer.stuff(query)
-    colors.sort(key=lambda color: color.score, reverse=True)
 
     return render_template('index.html', colors=colors, query=query)
 

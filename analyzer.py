@@ -10,10 +10,10 @@ from colormath.color_diff import delta_e_cie2000
 
 class Color:
     def __init__(self, red, green, blue, score):
-        self.red = red
-        self.green = green
-        self.blue = blue
-        self.score = score
+        self.red = float(red)
+        self.green = float(green)
+        self.blue = float(blue)
+        self.score = float(score)
 
     def diff(self, other):
         color1_rgb = sRGBColor(self.red/255, self.green/255, self.blue/255)
@@ -26,7 +26,7 @@ class Color:
         return "RGB(" + str(self.red) + ", " + str(self.green) + ", " + str(self.blue) + ")"
     
     def __str__(self):
-        return "Red(" + str(self.red) + " Green: " + str(self.green) + " Blue: " + str(self.blue) + " Score: " + str(self.score);
+        return "{},{},{},{}".format(str(self.red), str(self.green), str(self.blue), str(self.score))
 
     def relativeWidth(self, list):
         sumScore = sum(item.score for item in list)
@@ -55,15 +55,22 @@ def __tooBig(url):
     
 
 def stuff(keyword):
+    ColorList = []
+
+    if os.path.exists("cache/"+keyword):
+        with open('cache/'+keyword, 'r') as filehandle:
+            for line in filehandle:
+                list = line.split(",")
+                ColorList.append(Color(list[0],list[1],list[2],list[3]))
+        return ColorList
+
     response = google_images_download.googleimagesdownload()   #class instantiation
-    arguments = {"keywords":keyword,"limit":10,"silent_mode":True, "no_numbering":True,"no_download":True}
+    arguments = {"keywords":keyword,"limit":3,"silent_mode":True, "no_numbering":True,"no_download":True}
     #arguments = {"keywords":keyword,"limit":5,"no_numbering":True}   #creating list of arguments
     paths = response.download(arguments)   #passing the arguments to the function
 
     while paths[0][keyword].__len__() < 1:
         paths = response.download(arguments)
-
-    ColorList = []
 
     for uri in paths[0][keyword]:
         # Loads the image into memory
@@ -108,6 +115,16 @@ def stuff(keyword):
                 existing = __average(existing, existing2)
                 ColorList.remove(existing2)
                 ColorList2.remove(existing2)
+
+    ColorList.sort(key=lambda color: color.score, reverse=True)
+
+    if not os.path.exists("cache"):
+        os.mkdir("cache")
+
+    with open('cache/'+keyword, 'w+') as filehandle:
+        for color in ColorList:
+            filehandle.write('%s\n' % color)
+
     return ColorList
 #stuff("music")
 # print(Color(6,17,71,0).diff(Color(6,9,36,1)))
