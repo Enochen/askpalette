@@ -57,10 +57,11 @@ def __tooBig(url):
 def stuff(keyword):
     ColorList = []
 
+    file = "cache/" + keyword
     storageClient = storage.Client()
     bucket = storageClient.get_bucket('askpalette.appspot.com')
-    blob = bucket.blob(keyword)
-    exists = storage.Blob(bucket=bucket, name=keyword).exists(storageClient)
+    blob = bucket.blob(file)
+    exists = storage.Blob(bucket=bucket, name=file).exists(storageClient)
 
     if exists:
         file = blob.download_as_string().decode().splitlines()
@@ -129,7 +130,7 @@ def stuff(keyword):
     
     storageClient = storage.Client()    
     bucket = storageClient.get_bucket('askpalette.appspot.com')
-    blob = bucket.blob(keyword)
+    blob = bucket.blob(file)
     blob.upload_from_string(uploadStr)
 
     return ColorList
