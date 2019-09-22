@@ -1,17 +1,17 @@
 <!doctype html>
 <html>
 <head>
-  <title>Datastore and Firebase Auth Example</title>
+  <title>Ask Palette!</title>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-  <h1>Datastore and Firebase Auth Example</h1>
+  <h1>{{query}}</h1>
 
-  <h2>Last 10 visits</h2>
+  <h2>looks like</h2>
   {% for color in colors %}
-    <p style="color:{{ color.toRGB() }}">Color {{ loop.index }}, Score: {{color.score}}</p>
+    <p style="color:{{ color.toRGB() }}">{{ color.toRGB() }}, Score: {{"{:.4f}".format(color.score)}}</p>
   {% endfor %}
 
 </body>

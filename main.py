@@ -21,14 +21,14 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-@app.route('/')
-def root():
+@app.route('/<query>')
+def root(query):
     # For the sake of example, use static information to inflate the template.
     # This will be replaced with real information in later steps.
-    colors = analyzer.stuff("music")
+    colors = analyzer.stuff(query)
     colors.sort(key=lambda color: color.score, reverse=True)
 
-    return render_template('index.html', colors=colors)
+    return render_template('index.html', colors=colors, query=query)
 
 
 if __name__ == '__main__':
