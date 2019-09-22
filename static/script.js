@@ -42,6 +42,12 @@ function copy(text, target) {
   return result;
 }
 
+function checkEnter(e) {
+  if(e && e.keyCode == 13) {
+    gooo();
+  }
+}
+
 function gooo() {
   var inputVal = document.getElementById("input").value;
   location.href = "/query/" + inputVal;

@@ -8,7 +8,7 @@
 <body>
 
   <h2>Show me...</h2>
-  <div style="overflow: hidden; padding-right: .5em;">
+  <div onKeyPress="checkEnter(event)" style="overflow: hidden; padding-right: .5em;">
     <input id="input" type="text" value="{{query}}" style="width: 25%;" />
     <input onclick="gooo()" type="submit" value="Submit" />
   </div>
