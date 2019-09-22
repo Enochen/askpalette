@@ -44,6 +44,6 @@ function copy(text, target) {
 
 function gooo() {
   var inputVal = document.getElementById("input").value;
-  window.location.replace("query/" + inputVal);
+  location.href = "/query/" + inputVal;
 }
 // [END gae_python37_log]
