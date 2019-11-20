@@ -64,11 +64,13 @@ def stuff(keyword):
     exists = storage.Blob(bucket=bucket, name=file).exists(storageClient)
 
     if exists:
-        file = blob.download_as_string().decode().splitlines()
-        for line in file:
-            list = line.split(",")
-            ColorList.append(Color(list[0],list[1],list[2],list[3]))
-        return ColorList
+        file = blob.download_as_string()
+        if file:
+            lines = file.decode().splitlines()
+            for line in file:
+                list = line.split(",")
+                ColorList.append(Color(list[0],list[1],list[2],list[3]))
+            return ColorList
 
     response = google_images_download.googleimagesdownload()   #class instantiation
     arguments = {"keywords":keyword,"limit":3,"silent_mode":True, "no_numbering":True,"no_download":True}
@@ -105,12 +107,6 @@ def stuff(keyword):
                     break
             if not merged:
                 ColorList.append(color)
-
-            # print('frac: {}'.format(colorData.pixel_fraction))
-            # print('\tr: {}'.format(colorData.color.red))
-            # print('\tg: {}'.format(colorData.color.green))
-            # print('\tb: {}'.format(colorData.color.blue))
-            # print('\ta: {}'.format(colorData.color.alpha))
     ColorList2 = ColorList.copy()
     for existing in ColorList:
         for existing2 in ColorList2:

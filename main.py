@@ -22,6 +22,7 @@ app = Flask(__name__)
 
 
 @app.route('/')
+@app.route('/query/')
 def root():
     return render_template('index.html')
 
