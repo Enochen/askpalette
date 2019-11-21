@@ -67,7 +67,7 @@ def stuff(keyword):
         file = blob.download_as_string()
         if file:
             lines = file.decode().splitlines()
-            for line in file:
+            for line in lines:
                 list = line.split(",")
                 ColorList.append(Color(list[0],list[1],list[2],list[3]))
             return ColorList
