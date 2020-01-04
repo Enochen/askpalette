@@ -31,6 +31,9 @@ def query(query):
     # For the sake of example, use static information to inflate the template.
     # This will be replaced with real information in later steps.
     colors = analyzer.stuff(query)
+    
+    if colors is None:
+        return render_template('index.html', fail=True)
 
     return render_template('index.html', colors=colors, query=query)
 

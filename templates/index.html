@@ -16,6 +16,10 @@
   {% if query %}
     {% include 'query.html' %}
   {% endif %}
+  
+  {% if fail %}
+    <h2>Oops, an API key expired. Cached results are still available.</h2>
+  {% endif %}
 
   <h5>Ask Palette by Enoch Chen</h5>
 
