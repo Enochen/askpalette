@@ -56,8 +56,7 @@ def __tooBig(url):
 
 def stuff(keyword):
     ColorList = []
-
-    file = "cache/" + keyword
+    file = "cache/" + keyword.lower()
     storageClient = storage.Client()
     bucket = storageClient.get_bucket('askpalette.appspot.com')
     blob = bucket.blob(file)
@@ -72,62 +71,65 @@ def stuff(keyword):
                 ColorList.append(Color(list[0],list[1],list[2],list[3]))
             return ColorList
 
-    response = google_images_download.googleimagesdownload()   #class instantiation
-    arguments = {"keywords":keyword,"limit":3,"silent_mode":True, "no_numbering":True,"no_download":True}
-    #arguments = {"keywords":keyword,"limit":5,"no_numbering":True}   #creating list of arguments
-    paths = response.download(arguments)   #passing the arguments to the function
+    try:
+        response = google_images_download.googleimagesdownload()   #class instantiation
+        arguments = {"keywords":keyword,"limit":3,"silent_mode":True, "no_numbering":True,"no_download":True}
+        #arguments = {"keywords":keyword,"limit":5,"no_numbering":True}   #creating list of arguments
+        paths = response.download(arguments)   #passing the arguments to the function
 
-    while paths[0][keyword].__len__() < 1:
-        paths = response.download(arguments)
+        while paths[0][keyword].__len__() < 1:
+            paths = response.download(arguments)
 
-    for uri in paths[0][keyword]:
-        # Loads the image into memory
-        if(__tooBig(uri)):
-             continue
-        print(uri)
-        client = vision.ImageAnnotatorClient()
-        image = vision.types.Image()
-        image.source.image_uri = uri
+        for uri in paths[0][keyword]:
+            # Loads the image into memory
+            if(__tooBig(uri)):
+                 continue
+            print(uri)
+            client = vision.ImageAnnotatorClient()
+            image = vision.types.Image()
+            image.source.image_uri = uri
 
-        response = client.image_properties(image=image)
-        props = response.image_properties_annotation
-        #print('Properties:')
+            response = client.image_properties(image=image)
+            props = response.image_properties_annotation
+            #print('Properties:')
 
-        #print(response)
+            #print(response)
 
 
-        for colorData in props.dominant_colors.colors:
-            color = Color(colorData.color.red, colorData.color.green, colorData.color.blue, colorData.score)
-            
-            merged = False;
-            for existing in ColorList:
-                if existing.diff(color) < 10:
-                    existing = __average(existing, color)
-                    merged = True
-                    break
-            if not merged:
-                ColorList.append(color)
-    ColorList2 = ColorList.copy()
-    for existing in ColorList:
-        for existing2 in ColorList2:
-            threshold = 18
-            if ColorList.__len__() < 7:
-                threshold = 5
-            if existing != existing2 and existing.diff(existing2) < threshold:
-                existing = __average(existing, existing2)
-                ColorList.remove(existing2)
-                ColorList2.remove(existing2)
+            for colorData in props.dominant_colors.colors:
+                color = Color(colorData.color.red, colorData.color.green, colorData.color.blue, colorData.score)
+                
+                merged = False;
+                for existing in ColorList:
+                    if existing.diff(color) < 10:
+                        existing = __average(existing, color)
+                        merged = True
+                        break
+                if not merged:
+                    ColorList.append(color)
+        ColorList2 = ColorList.copy()
+        for existing in ColorList:
+            for existing2 in ColorList2:
+                threshold = 18
+                if ColorList.__len__() < 7:
+                    threshold = 5
+                if existing != existing2 and existing.diff(existing2) < threshold:
+                    existing = __average(existing, existing2)
+                    ColorList.remove(existing2)
+                    ColorList2.remove(existing2)
 
-    ColorList.sort(key=lambda color: color.score, reverse=True)
+        ColorList.sort(key=lambda color: color.score, reverse=True)
 
-    uploadStr = ""
-    for color in ColorList:
-        uploadStr += (color.__str__() + '\n')
-    
-    storageClient = storage.Client()    
-    bucket = storageClient.get_bucket('askpalette.appspot.com')
-    blob = bucket.blob(file)
-    blob.upload_from_string(uploadStr)
+        uploadStr = ""
+        for color in ColorList:
+            uploadStr += (color.__str__() + '\n')
+        
+        storageClient = storage.Client()    
+        bucket = storageClient.get_bucket('askpalette.appspot.com')
+        blob = bucket.blob(file)
+        blob.upload_from_string(uploadStr)
+    except:
+        return None
 
     return ColorList
 #stuff("music")
